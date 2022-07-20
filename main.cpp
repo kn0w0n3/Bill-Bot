@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include "emailsendcontroller.h"
+#include "database.h"
 
 int main(int argc, char *argv[])
 {
@@ -8,6 +11,13 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    EmailSendController emailSendController;
+    engine.rootContext()->setContextProperty("emailSendController", &emailSendController);
+
+    Database database;
+    engine.rootContext()->setContextProperty("database", &database);
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {

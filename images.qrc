@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/scroll_border_black_thinner.png</file>
+        <file>images/abstract_colorful_bg_2.png</file>
+    </qresource>
+</RCC>
