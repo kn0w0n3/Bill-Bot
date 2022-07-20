@@ -10,4 +10,6 @@ Built on Jun 16 2020 01:19:17
 From revision 48e46132e3  
 https://www.qt.io/  
 
+Database:  
+https://www.sqlite.org/index.html  
 https://sqlitestudio.pl/  
