@@ -8,4 +8,6 @@ Qt Creator 4.12.3
 Based on Qt 5.14.2 (MSVC 2017, 32 bit)  
 Built on Jun 16 2020 01:19:17  
 From revision 48e46132e3  
-https://www.qt.io/
+https://www.qt.io/  
+
+https://sqlitestudio.pl/  
