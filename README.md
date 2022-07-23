@@ -1,5 +1,5 @@
 # Bill-Bot
- A program to send email reminders for bills  
+ A program to send email reminders for bills | Currently working with: Gmail 
  
  ![Bill_Bot_GUI](https://user-images.githubusercontent.com/22214754/179885556-75c34cf2-ad14-4059-b81f-1e08a3ff9714.PNG)  
 
@@ -18,3 +18,13 @@ https://www.qt.io/
 ![sqlitefg](https://user-images.githubusercontent.com/22214754/179894516-3059e142-fb38-40bc-a32c-65500a223eb1.png)  
 https://www.sqlite.org/index.html  
 https://sqlitestudio.pl/  
+
+# Generate Google App Password 
+1. On your computer, go to your Google Account.   
+2. At the left, click Security.   
+3. Under "Signing in to Google," click App passwords and sign in, if required.  
+4. If you don't find "App passwords," click 2-Step Verification and follow the steps to turn on 2-step verification for your account. You may have to sign in again.  
+5. Under “App passwords,” click Select app and then Mail.  
+6. Click Select device and then Windows Device.  
+7. Click Generate.  
+8. From the app password box, copy the 16 character password generated. You'll need to use the google generated app password instead of your real password.  
