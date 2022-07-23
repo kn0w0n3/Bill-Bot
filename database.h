@@ -9,7 +9,6 @@
 
 class Database: public QObject{
     Q_OBJECT
-    //Q_PROPERTY(QString rMessage READ getCurrentValues NOTIFY dbAmountDueToQml)
 
 public:
     explicit Database(QObject *parent = nullptr);
@@ -22,30 +21,36 @@ signals:
     void dbAmountDueToQml(QString amountDue_);
 
 public slots:
-    void getInfoFromQmlForm(QString bName,QString dDate, QString dtNotify, QString aDue);
-    void insertDatabaseInfo();
-    void populateCurrentReminders();
-    QString getCurrentValues();
+    void receiveBillInfoFromQML(QString bName,QString dDate, QString dtNotify, QString aDue);
+    void insertBillDbInfo();
+    void receiveEmailInfoFromQML(QString uName, QString pWord);
+    void insertEmailToDb();
+    void populateCurrentReminders();    
 
 private:
-    QSqlDatabase *sqlitedb;
-    //QStringList order;
-    int columnCounter = 0;
-    QSqlDatabase mydb;
-    bool connected;
-    //bool CreateConnection();
+    //Connections for working with different tables simultaneously.
+    QSqlDatabase billDB;
+    QSqlDatabase sEmailDB;
+    QSqlDatabase rEmailDB;
+    QSqlDatabase populateDB;
 
-    //Variables to hold the incoming data from the form
+    //Variables to hold the incoming data from the reminder form.
     QString billName;
     QString dueDate;
     QString dateToNotify;
     QString amountDue;
 
-    //Variables to hold the incoming data from the database
+    //Variables to hold the incoming data from the database.
     QString pBillName;
     QString pDueDate;
     QString pDateToNotify;
     QString pAmountDue;
+
+    //Variables to hold the incoming data for the email address to save to the database.
+    QString iUsername;
+    QString iPassword;
+    QString iServer = "smtp.gmail.com";
+    QString iPortNumber = "465";
 };
 
 #endif // DATABASE_H

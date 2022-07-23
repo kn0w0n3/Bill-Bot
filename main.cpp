@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    EmailSendController emailSendController;
-    engine.rootContext()->setContextProperty("emailSendController", &emailSendController);
+    EmailSendController emailSend;
+    engine.rootContext()->setContextProperty("emailSend", &emailSend);
 
     Database database;
     engine.rootContext()->setContextProperty("database", &database);

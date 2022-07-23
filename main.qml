@@ -9,7 +9,6 @@ Window {
     title: qsTr("Bill Bot")
 
     //Timer to update the clock text
-
     Timer {
         id: timer
         interval: 1000
@@ -20,7 +19,167 @@ Window {
             currentTimeText.text =  Qt.formatTime(new Date(),"hh:mm:ss")
         }
     }
-    //Timer tto update the date text
+
+    //Timer to update the date text
+    Rectangle {
+        id: settings
+        width: 640
+        height: 480
+        color: "#ffffff"
+
+        Image {
+            id: image
+            x: 0
+            y: 0
+            width: 640
+            height: 480
+            fillMode: Image.PreserveAspectFit
+            source: "images/abstract_colorful_bg_2.png"
+        }
+
+        Text {
+            id: element4
+            x: 405
+            y: 100
+            width: 169
+            height: 24
+            text: qsTr("Saved Email Addresses")
+            font.underline: true
+            font.bold: false
+            font.pixelSize: 16
+        }
+
+        Button {
+            id: settingsBackButton
+            x: 4
+            y: 5
+            width: 65
+            height: 25
+            text: qsTr("Back")
+            onClicked: {
+                settings.visible = false
+                mainMenu.visible = true
+            }
+        }
+
+        Image {
+            id: borderImage1
+            x: 293
+            y: 2
+            width: 380
+            height: 396
+            fillMode: Image.PreserveAspectFit
+            source: "images/scroll_border_black_thinner.png"
+        }
+
+        Button {
+            id: deleteSavedEmailButton
+            x: 453
+            y: 293
+            width: 60
+            height: 20
+            text: qsTr("Delete")
+        }
+
+        Rectangle {
+            id: billNameTxtRect5
+            x: 51
+            y: 145
+            width: 200
+            height: 16
+            color: "#ffffff"
+            TextEdit {
+                id: senderEmailTxtEdit
+                x: 3
+                y: 0
+                width: 192
+                height: 16
+                text: qsTr("")
+                cursorVisible: false
+                selectByMouse: true
+                clip: true
+                wrapMode: Text.NoWrap
+                font.pixelSize: 12
+            }
+            border.color: "#000000"
+        }
+        Rectangle {
+            id: billNameTxtRect6
+            x: 51
+            y: 183
+            width: 200
+            height: 16
+            color: "#ffffff"
+            TextEdit {
+                id: sndrEmailPwdTxtEdit
+                x: 3
+                y: 0
+                width: 192
+                height: 16
+                text: qsTr("")
+                cursorVisible: false
+                selectByMouse: true
+                clip: true
+                wrapMode: Text.NoWrap
+                font.pixelSize: 12
+            }
+            border.color: "#000000"
+        }
+        Button {
+            id: saveEmailInfoButton
+            x: 78
+            y: 213
+            width: 60
+            height: 20
+            text: qsTr("Add")
+            onClicked: {
+                //Send the user entered email info to the C++ Database class to be inserted into the database
+                database.receiveEmailInfoFromQML(senderEmailTxtEdit.text, sndrEmailPwdTxtEdit.text)
+
+                //Clear the text box
+                senderEmailTxtEdit.text = ""
+                sndrEmailPwdTxtEdit.text = ""
+            }
+        }
+        Button {
+            id: clearEmailInfoButton
+            x: 158
+            y: 213
+            width: 60
+            height: 20
+            text: qsTr("Clear")
+        }
+        Text {
+            id: element3
+            x: 53
+            y: 168
+            width: 130
+            height: 14
+            text: qsTr("Sender Email Password")
+            font.pixelSize: 12
+        }
+        Text {
+            id: element2
+            x: 53
+            y: 130
+            width: 122
+            height: 14
+            text: qsTr("Sender Email Address")
+            font.pixelSize: 12
+        }
+        Text {
+            id: element1
+            x: 70
+            y: 100
+            width: 159
+            height: 24
+            text: qsTr("Add Sender Email Info")
+            font.underline: true
+            font.bold: false
+            font.pixelSize: 16
+        }
+    }
+
     Rectangle {
         id: addItemScreen
         width: 640
@@ -38,23 +197,23 @@ Window {
 
             Button {
                 id: saveNewBillReminder
-                x: 272
-                y: 308
+                x: 299
+                y: 303
                 width: 75
                 height: 25
                 text: qsTr("Save")
 
                 onClicked: {
                     //Run the c++ function to grab the data from here
-                    database.getInfoFromQmlForm(billNameTxtEdit.text, dueDateTextEdit.text, notifyDatextEdit.text, amountDueTxtEdit.text)
+                    database.receiveBillInfoFromQML(billNameTxtEdit.text, dueDateTextEdit.text, notifyDatextEdit.text, amountDueTxtEdit.text)
 
                 }
             }
 
             Button {
                 id: button3
-                x: 374
-                y: 308
+                x: 401
+                y: 303
                 width: 75
                 height: 25
                 text: qsTr("Clear")
@@ -89,8 +248,6 @@ Window {
                     */
                 }
             }
-
-
         }
 
         Text {
@@ -142,16 +299,16 @@ Window {
             id: billNameTxtRect2
             x: 277
             y: 205
-            width: 165
+            width: 225
             height: 16
             color: "#ffffff"
             border.color: "black"
 
             TextEdit {
                 id: dueDateTextEdit
-                x: 0
+                x: 3
                 y: -1
-                width: 162
+                width: 214
                 height: 17
                 clip: true
                 font.pixelSize: 12
@@ -162,16 +319,16 @@ Window {
             id: billNameTxtRect3
             x: 277
             y: 232
-            width: 165
+            width: 225
             height: 16
             color: "#ffffff"
             border.color: "black"
 
             TextEdit {
                 id: notifyDatextEdit
-                x: 0
+                x: 3
                 y: 0
-                width: 162
+                width: 214
                 height: 16
                 clip: true
                 font.pixelSize: 12
@@ -182,16 +339,16 @@ Window {
             id: billNameTxtRect4
             x: 277
             y: 258
-            width: 165
+            width: 225
             height: 16
             color: "#ffffff"
             border.color: "black"
 
             TextEdit {
                 id: amountDueTxtEdit
-                x: 0
+                x: 3
                 y: 0
-                width: 162
+                width: 214
                 height: 16
                 clip: true
                 font.pixelSize: 12
@@ -202,30 +359,29 @@ Window {
             id: billNameTxtRect1
             x: 278
             y: 177
-            width: 165
+            width: 224
             height: 16
             color: "#ffffff"
             border.color: "black"
 
             TextEdit {
                 id: billNameTxtEdit
-                x: 0
+                x: 3
                 y: 0
-                width: 162
+                width: 213
                 height: 16
                 text: qsTr("")
                 selectByMouse: true
                 clip: true
                 wrapMode: Text.NoWrap
                 font.pixelSize: 12
-
             }
         }
 
         Text {
             id: element
-            x: 299
-            y: 137
+            x: 329
+            y: 136
             width: 122
             height: 25
             color: "#000000"
@@ -234,10 +390,6 @@ Window {
             font.bold: false
             font.pixelSize: 18
         }
-
-
-
-
     }
 
     Timer {
@@ -253,13 +405,12 @@ Window {
         }
     }
 
-
-
     Rectangle {
         id: mainMenu
         width: 640
         height: 480
         color: "#ffffff"
+
 
         Image {
             id: bgImage
@@ -272,8 +423,8 @@ Window {
 
             Text {
                 id: currentTimeText
-                x: 558
-                y: 6
+                x: 554
+                y: 8
                 width: 67
                 height: 21
                 color: "#000000"
@@ -297,11 +448,10 @@ Window {
 
         }
 
-
         Button {
-            id: button
-            x: 182
-            y: 418
+            id: addReminderButton
+            x: 93
+            y: 410
             width: 90
             height: 20
             text: qsTr("Add Reminder")
@@ -329,9 +479,9 @@ Window {
         }
 
         Button {
-            id: button1
-            x: 354
-            y: 418
+            id: deleteReminderButton
+            x: 271
+            y: 410
             width: 99
             height: 20
             text: qsTr("Delete Reminder")
@@ -339,8 +489,8 @@ Window {
 
         Text {
             id: currentRemindersText
-            x: 238
-            y: 95
+            x: 251
+            y: 64
             width: 167
             height: 22
             color: "#000000"
@@ -350,15 +500,6 @@ Window {
             font.pixelSize: 19
         }
 
-        Image {
-            id: borderImage
-            x: 0
-            y: 2
-            width: 640
-            height: 480
-            fillMode: Image.PreserveAspectFit
-            source: "images/scroll_border_black_thinner.png"
-        }
 
         ScrollView {
             id: scrollView
@@ -369,14 +510,13 @@ Window {
             ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
             ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
-
-
             ListView {
                 id: listView
                 x: 92
-                y: 123
+                y: 130
                 width: 451
                 height: 199
+                highlightFollowsCurrentItem: false
 
                 model: ListModel {
 
@@ -393,6 +533,7 @@ Window {
                     x: 5
                     width: 80
                     height: 40
+                    focusPolicy: Qt.NoFocus
                     Row {
                         id: row1
                         spacing: 10
@@ -404,49 +545,34 @@ Window {
 
                         Text {
                             id:reminderText
-                            //text: _billName + "   |   " + _dueDate + "   |   " + _dateToNotify + "   |   " + _amountDue
+                            //text: _billName + "   |   " + _dueDate + "    |   " + _dateToNotify + "    |   " + _amountDue
                             text: ""
                             font.bold: false
                             anchors.verticalCenter: parent.verticalCenter
                             Connections {
                                 target: database
+                                function onReNextNumber(number) {
+                                    numberLabel.text = number
+                                }
 
                                 onDbBillNameToQml: {
 
-                                    reminderText.text += billName_ + "   |   "
+                                    reminderText.text += billName_ + "     |      "
                                     //reminderModel.append({"_billName": billName_})
                                 }
                                 onDbDueDateToQml: {
-                                    reminderText.text += dueDate_ + "   |   "
+                                    reminderText.text += dueDate_ + "     |      "
                                     //reminderModel.append({"_dueDate": dueDate_})
                                 }
 
                                 onDbNotifyDateToQml:{
-                                    reminderText.text += notifyDate_ + "   |   "
+                                    reminderText.text += notifyDate_ + "     |   "
                                     //reminderModel.append({"_dateToNotify": notifyDate_})
                                 }
 
                                 onDbAmountDueToQml:{
 
-                                    //TODO FIX THIS COMMUNICATION
-
-
-
                                     reminderText.text += amountDue_
-                                    // reminderModel.append({"_amountDue": amountDue_})
-                                    //reminderText.text = billName_ + "   |   " + dueDate_ + "   |   " + notifyDate_ + "   |   " + amountDue_
-                                    //reminderText.text = "Hello " + amountDue_
-                                    //text: _billName + "   |   " + _dueDate + "   |   " + _dateToNotify + "   |   " + _amountDue
-                                    //_billName.text = billName_
-                                    //_dueDate.text = dueDate_
-                                    //_dateToNotify.text = notifyDate_
-                                    //_amountDue.text = amountDue_
-                                    //xxxxxx.text =  "   |   " +  "   |   " + "   |   " + _amountDue
-                                    //text: _billName + "   |   " + _dueDate + "   |   " + _dateToNotify + "   |   " + _amountDue
-                                    //reminderModel.append({_billName: billName_, _dueDate: dueDate_, _dateToNotify: notifyDate_, _amountDue: amountDue_})
-                                    //reminderModel.append(reminderText.text)// This is available in all editors
-
-
 
                                 }
                             }
@@ -464,15 +590,74 @@ Window {
                 //color: "#ffffff"
             }
             */
+        }
 
+        Button {
+            id: settingsButton
+            x: 451
+            y: 410
+            width: 99
+            height: 20
+            text: qsTr("Settings")
+            onClicked: {
+                mainMenu.visible = false
+                addItemScreen.visible = false
+                settings.visible = true
+            }
+        }
+
+        Text {
+            id: element5
+            x: 112
+            y: 109
+            width: 52
+            height: 14
+            text: qsTr("Bill Name")
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: element6
+            x: 217
+            y: 109
+            height: 14
+            text: qsTr("Due Date")
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: element7
+            x: 295
+            y: 109
+            width: 79
+            height: 14
+            text: qsTr("Reminder Date")
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: element8
+            x: 389
+            y: 110
+            width: 69
+            height: 14
+            text: qsTr("Amount Due")
+            font.pixelSize: 12
+        }
+        Image {
+            id: borderImage
+            x: 0
+            y: 2
+            width: 640
+            height: 480
+            fillMode: Image.PreserveAspectFit
+            source: "images/scroll_border_black_thinner.png"
         }
     }
 }
 
-
-
 /*##^##
 Designer {
-    D{i:2;invisible:true}
+    D{i:2;invisible:true}D{i:36;invisible:true}
 }
 ##^##*/

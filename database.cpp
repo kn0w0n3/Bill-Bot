@@ -1,39 +1,74 @@
 #include "database.h"
 
 Database::Database(QObject *parent) : QObject(parent){
-    mydb = QSqlDatabase::addDatabase("QSQLITE");
-    mydb.setDatabaseName("C:/pathToDB");
+    //Multiple connections were required to work with the different tables simultaneously.
+    //Format for the query: QSqlQuery query(QSqlDatabase::database("conn2-BillInfo"));
+    sEmailDB = QSqlDatabase::addDatabase("QSQLITE", "conn1_EmailInfo");
+    sEmailDB.setDatabaseName("C:/ENTER_YOUR_PATH_TO/bill_info.db");
 
-    if(!mydb.open()){
-        qDebug() << "Constructor: Local Database Not Connected......";
+    billDB = QSqlDatabase::addDatabase("QSQLITE", "conn2-BillInfo");
+    billDB.setDatabaseName("C:/ENTER_YOUR_PATH_TO/bill_info.db");
+
+    populateDB = QSqlDatabase::addDatabase("QSQLITE", "conn3-popCReminders_");
+    populateDB.setDatabaseName("C:/ENTER_YOUR_PATH_TO/bill_info.db");
+
+    //For now, do an initial check to see if the connections are working.
+    if(!sEmailDB.open()){
+        qDebug() << "Constructor:  Email Database Not Connected......";
     }
     else{
-        qDebug() << "Constructor: Local Database is Connected.......";
-        //insertOrderTimer = new QTimer();
-        //connect(insertOrderTimer, SIGNAL(timeout()), this, SLOT(InsertTestOrders()));
-        //insertOrderTimer->start(10000);
+        qDebug() << "Constructor:  Email Database is Connected.......";
+    }
+
+    if(!billDB.open()){
+        qDebug() << "Constructor: billDB Not Connected......";
+    }
+    else{
+        qDebug() << "Constructor: billDB is Connected.......";
+    }
+    if(!rEmailDB.open()){
+        qDebug() << "Constructor: rEmailDB Not Connected......";
+    }
+    else{
+        qDebug() << "Constructor: rEmailDB is Connected.......";
     }
 }
 
-void Database::getInfoFromQmlForm(QString bName, QString dDate, QString dtNotify, QString aDue){
+//Receive and store bill information from the QML form
+void Database::receiveBillInfoFromQML(QString bName, QString dDate, QString dtNotify, QString aDue){
     billName = bName;
     dueDate = dDate;
     dateToNotify = dtNotify;
     amountDue = aDue;
-
-    qDebug() << billName;
-    qDebug() << dueDate;
-    qDebug() << dateToNotify;
-    qDebug() << amountDue;
-    insertDatabaseInfo();
+    insertBillDbInfo();
 }
 
-void Database::insertDatabaseInfo(){
-    if(!mydb.open()){
-        qDebug() << "Order Creator Database Not Connected..........";
+//Insert sender email info to the database.
+void Database::insertEmailToDb(){
+    if(!sEmailDB.open()){
+        qDebug() << "Function: Local Email Database Not Connected......";
     }
     else{
-        QSqlQuery query;
+        qDebug() << "Function: Local Email Info Database is Connected.......";
+        QSqlQuery insertEmailQuery(QSqlDatabase::database("conn1_EmailInfo"));
+        insertEmailQuery.exec("INSERT INTO sender_email_info (username, password, server, port_number) " "VALUES (?, ?, ?, ?)");
+
+        qDebug() << "Trying to insert email info to database.......";
+        insertEmailQuery.bindValue(0, iUsername);
+        insertEmailQuery.bindValue(1, iPassword);
+        insertEmailQuery.bindValue(2, iServer);
+        insertEmailQuery.bindValue(3, iPortNumber);
+        insertEmailQuery.exec();
+    }
+}
+
+//Insert reminder form info into the database.
+void Database::insertBillDbInfo(){
+    if(!billDB.open()){
+        qDebug() << "Database Not Connected..........";
+    }
+    else{
+        QSqlQuery query(QSqlDatabase::database("conn2-BillInfo"));
         query.exec("INSERT INTO bill_info_table (db_bill_name, db_due_date, db_date_to_notify, db_amount_due)" "VALUES (?, ?, ?, ?)");
         qDebug() << "Inserting info to database.......";
         query.bindValue(0, billName);
@@ -44,35 +79,39 @@ void Database::insertDatabaseInfo(){
     }
 }
 
+//Get the current saved reminders from the database and populate the main menu QML form.
 void Database::populateCurrentReminders(){
-
-    QSqlQuery qry;
-    qry.exec("SELECT db_bill_name, db_due_date, db_date_to_notify, db_amount_due FROM bill_info_table WHERE id > 0");
-    qDebug() << "Pulling from database............";
-    while(qry.next()){
-        pBillName = qry.value(0).toString();
+    QSqlQuery popCReminders(QSqlDatabase::database("conn3-popCReminders_"));
+    popCReminders.exec("SELECT db_bill_name, db_due_date, db_date_to_notify, db_amount_due FROM bill_info_table WHERE id > 0");
+    qDebug() << "Pulling from database to populate current reminders............";
+    while(popCReminders.next()){
+        pBillName = popCReminders.value(0).toString();
         emit dbBillNameToQml(pBillName);
 
-        pDueDate = qry.value(1).toString();
+        pDueDate = popCReminders.value(1).toString();
         emit dbDueDateToQml(pDueDate);
 
-        pDateToNotify = qry.value(2).toString();
+        pDateToNotify = popCReminders.value(2).toString();
         emit dbNotifyDateToQml(pDateToNotify);
 
-        pAmountDue = qry.value(3).toString();
+        pAmountDue = popCReminders.value(3).toString();
         emit dbAmountDueToQml(pAmountDue);
-
-        //Update the database
-        //QSqlQuery qry2;
-        //qry2.exec("UPDATE bill_info_table SET order_status = 1 WHERE order_number ='"+orderNumber+"'");
-        //qDebug() << "Updating Database.............";
     }
-    // }
 }
 
-QString Database::getCurrentValues(){
-    //return pBillName;
-    //return pDueDate;
-    //return pDateToNotify;
-    return pAmountDue;
+//Receive and store data from the QML settings form. This is a sending email address that the user wants to save. Only Gmail is working for now.
+void Database::receiveEmailInfoFromQML(QString uName, QString pWord){
+    if(uName.isEmpty()){
+        return;
+        qDebug() << "Empty string in receiveEmailInfoToSave() function";
+    }
+    iUsername = uName;
+    iPassword = pWord;
+
+    qDebug() << iUsername;
+    qDebug() << iPassword;
+    qDebug() << iServer;
+    qDebug() << iPortNumber;
+    insertEmailToDb();
 }
+

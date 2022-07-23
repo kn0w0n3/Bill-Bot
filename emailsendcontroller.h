@@ -5,32 +5,42 @@
 #include <QtWidgets/QMessageBox>
 #include <QDebug>
 
-class EmailSendController: public QObject
-{
+class EmailSendController: public QObject{
      Q_OBJECT
 
-    Q_PROPERTY(QString rMessage NOTIFY sendMsgConfirmToQml)
 public:
     explicit EmailSendController(QObject *parent = nullptr);
 
-     //The destructor gave a MOC error
-     //~EmailSendController();
 signals:
     void sendMsgConfirmToQml(QString);
 
-private slots:
+public slots:
     void sendMail();
+
+private slots:
     void mailSent(QString);
 
 private:
-    QString name;
-    QString uname;
-    QString paswd;
-    QString server;
-    QString port;
-    QString rcpt;
-    QString subject;
-    QString msg;
+    Smtp *smtp;
+
+    //Sender email address
+    QString uname = "senderEmail@gmail.com";
+
+    //Sender password. This must be a google generated app password.
+    //https://support.google.com/accounts/answer/185833?hl=en
+    QString paswd = "yourAppPassword";
+
+    //Gmail server info and port number below
+    QString server = "smtp.gmail.com";
+    int port = 465;
+
+    //Recipient email address
+    QString rcpt = "someName@gmail.com";
+
+    //Subject and message for the email
+    QString subject = "Test From Qt";
+    QString msg  = "Hello this is a test from Qt.........";
+
 };
 
 #endif // EMAILSENDCONTROLLER_H
