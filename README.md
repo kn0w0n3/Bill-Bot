@@ -5,7 +5,12 @@
 
 # Built with:  
 
-![QtLogo](https://user-images.githubusercontent.com/22214754/179895211-d52559ab-35df-4fcc-bf69-7377739330d4.png)  
+![Bill_Bot_GUI_1](https://user-images.githubusercontent.com/22214754/180588583-278ef438-90d0-49aa-bd35-f7832266045a.PNG)  
+
+![Bill_Bot_GUI_2](https://user-images.githubusercontent.com/22214754/180588587-eff16116-d150-4c3e-8b34-5dbc7e9498c1.PNG)  
+
+![Bill_Bot_GUI_3](https://user-images.githubusercontent.com/22214754/180588590-3fb2807f-95c8-4286-9d30-5abfd70b17a5.PNG)  
+
 
 **IDE:**  
 Qt Creator 4.12.3  
