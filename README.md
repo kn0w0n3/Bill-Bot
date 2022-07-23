@@ -18,8 +18,8 @@ Built on Jun 16 2020 01:19:17
 From revision 48e46132e3  
 https://www.qt.io/ 
 
-Framework:
-Qt framework 5.15.0  
+Framework:  
+Qt framework 5.15.0    
 
 **Database:**      
 ![sqlitefg](https://user-images.githubusercontent.com/22214754/179894516-3059e142-fb38-40bc-a32c-65500a223eb1.png)  
