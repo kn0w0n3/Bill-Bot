@@ -24,18 +24,18 @@ private:
     Smtp *smtp;
 
     //Sender email address
-    QString uname = "senderEmail@gmail.com";
+    QString uname = "pragma0ncex@gmail.com";
 
     //Sender password. This must be a google generated app password.
     //https://support.google.com/accounts/answer/185833?hl=en
-    QString paswd = "yourAppPassword";
+    QString paswd = "Enter your google app password here";
 
     //Gmail server info and port number below
     QString server = "smtp.gmail.com";
     int port = 465;
 
     //Recipient email address
-    QString rcpt = "someName@gmail.com";
+    QString rcpt = "pragma0ncex@gmail.com";
 
     //Subject and message for the email
     QString subject = "Test From Qt";

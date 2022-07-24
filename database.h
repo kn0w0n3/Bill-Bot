@@ -19,13 +19,19 @@ signals:
     void dbDueDateToQml(QString dueDate_);
     void dbNotifyDateToQml(QString notifyDate_);
     void dbAmountDueToQml(QString amountDue_);
+    void dbSvdEmailToQml(QString savedEmail_);
+    void fEmailToQml(QString fEmail_);
+    void fEmailToQmlDone(QString fEmailDone_);
+    void fBillToQmlDone(QString fBilllDone_);
 
 public slots:
     void receiveBillInfoFromQML(QString bName,QString dDate, QString dtNotify, QString aDue);
     void insertBillDbInfo();
     void receiveEmailInfoFromQML(QString uName, QString pWord);
     void insertEmailToDb();
-    void populateCurrentReminders();    
+    void populateCurrentReminders();
+    void populateSvdEmailBox();
+    void getFirstDatabaseEntries();
 
 private:
     //Connections for working with different tables simultaneously.
@@ -33,6 +39,8 @@ private:
     QSqlDatabase sEmailDB;
     QSqlDatabase rEmailDB;
     QSqlDatabase populateDB;
+    QSqlDatabase popEmailDB;
+    QSqlDatabase fEmailDB;
 
     //Variables to hold the incoming data from the reminder form.
     QString billName;
@@ -51,6 +59,15 @@ private:
     QString iPassword;
     QString iServer = "smtp.gmail.com";
     QString iPortNumber = "465";
+
+
+    //Variable to hold the incoming saved sender email addresses to poulate the saved email box
+    QString _emailAddress;
+
+    int counter = 0;
+    int counterTwo = 0;
+
+    QString fEmailInDb;
 };
 
 #endif // DATABASE_H

@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
+import QtGraphicalEffects 1.12
 
 Window {
     visible: true
@@ -8,24 +9,19 @@ Window {
     height: 480
     title: qsTr("Bill Bot")
 
-    //Timer to update the clock text
-    Timer {
-        id: timer
-        interval: 1000
-        repeat: true
-        running: true
-        onTriggered:
-        {
-            currentTimeText.text =  Qt.formatTime(new Date(),"hh:mm:ss")
-        }
-    }
 
-    //Timer to update the date text
+    //Timer to update the clock text
     Rectangle {
         id: settings
         width: 640
         height: 480
         color: "#ffffff"
+        Component.onCompleted:{
+            database.populateSvdEmailBox()
+            database.getFirstDatabaseEntries()
+        }
+
+
 
         Image {
             id: image
@@ -35,13 +31,22 @@ Window {
             height: 480
             fillMode: Image.PreserveAspectFit
             source: "images/abstract_colorful_bg_2.png"
+
+            Rectangle {
+                id: savedEmailBoxBg
+                x: 347
+                y: 130
+                width: 272
+                height: 145
+                color: "#ffffff"
+            }
         }
 
         Text {
             id: element4
-            x: 405
-            y: 100
-            width: 169
+            x: 402
+            y: 103
+            width: 163
             height: 24
             text: qsTr("Saved Email Addresses")
             font.underline: true
@@ -56,6 +61,21 @@ Window {
             width: 65
             height: 25
             text: qsTr("Back")
+            layer.enabled: true
+            layer.effect: DropShadow {
+                transparentBorder: true
+                color: "#aa000000"
+                radius: 8
+                samples: 17
+                horizontalOffset: 4
+                verticalOffset: 4
+                spread: 0
+            }
+            background: Rectangle {
+                color: "#ffffff"
+                border.color: "#000000"
+                radius: 50
+            }
             onClicked: {
                 settings.visible = false
                 mainMenu.visible = true
@@ -79,6 +99,24 @@ Window {
             width: 60
             height: 20
             text: qsTr("Delete")
+            layer.enabled: true
+            layer.effect: DropShadow {
+                transparentBorder: true
+                color: "#aa000000"
+                radius: 8
+                samples: 17
+                horizontalOffset: 4
+                verticalOffset: 4
+                spread: 0
+            }
+            background: Rectangle {
+                color: "#ffffff"
+                border.color: "#000000"
+                radius: 50
+            }
+            onClicked: {
+                //reminderEmailModel.remove(0)
+            }
         }
 
         Rectangle {
@@ -103,6 +141,7 @@ Window {
             }
             border.color: "#000000"
         }
+
         Rectangle {
             id: billNameTxtRect6
             x: 51
@@ -125,6 +164,7 @@ Window {
             }
             border.color: "#000000"
         }
+
         Button {
             id: saveEmailInfoButton
             x: 78
@@ -132,6 +172,23 @@ Window {
             width: 60
             height: 20
             text: qsTr("Add")
+            layer.enabled: true
+            layer.effect: DropShadow {
+                transparentBorder: true
+                color: "#aa000000"
+                radius: 8
+                samples: 17
+                horizontalOffset: 4
+                verticalOffset: 4
+                spread: 0
+            }
+
+            background: Rectangle {
+                color: "#ffffff"
+                border.color: "#000000"
+                radius: 50
+            }
+
             onClicked: {
                 //Send the user entered email info to the C++ Database class to be inserted into the database
                 database.receiveEmailInfoFromQML(senderEmailTxtEdit.text, sndrEmailPwdTxtEdit.text)
@@ -148,6 +205,21 @@ Window {
             width: 60
             height: 20
             text: qsTr("Clear")
+            layer.enabled: true
+            layer.effect: DropShadow {
+                transparentBorder: true
+                color: "#aa000000"
+                radius: 8
+                samples: 17
+                horizontalOffset: 4
+                verticalOffset: 4
+                spread: 0
+            }
+            background: Rectangle {
+                color: "#ffffff"
+                border.color: "#000000"
+                radius: 50
+            }
         }
         Text {
             id: element3
@@ -178,6 +250,107 @@ Window {
             font.bold: false
             font.pixelSize: 16
         }
+
+        ListView{
+            id: savedEmailListVew
+            x: 351
+            y: 133
+            width: 264
+            height: 138
+            clip: true
+            orientation: ListView.Vertical
+            highlightFollowsCurrentItem: false
+            //headerPositioning: savedEmailListVew.OverlayHeader
+            model: ListModel {
+                id:reminderEmailModel
+                ListElement {
+
+                    someText: "someText"
+                    //anchors.centerIn: parent
+
+                }
+            }
+
+            //Populating the list model dynaically is haveing some issues. Janky workaround is to just remove the duplicate first entry.
+            delegate: Label{
+
+                id: iEmailLabel
+                width: 451
+                height: 25
+
+                Text {
+                    id:iEMailText
+
+                    text: someText
+                    font.bold: false
+                    anchors.verticalCenter: parent.verticalCenter
+                    Connections {
+                        target: database
+
+                        onFEmailToQml: {
+                            iEMailText.text = fEmail_
+                            reminderEmailModel.append({"someText": fEmail_})
+                        }
+                        onFEmailToQmlDone: {
+                            reminderEmailModel.remove(0)
+                        }
+
+                    }
+
+                }
+            }
+
+
+        }
+
+
+        //Timer to update the date text
+
+        Timer {
+            id: dateTimer
+            interval: 1000
+            repeat: true
+            running: true
+            property var locale: Qt.locale()
+            property date currentDate: new Date()
+            property string dateString
+            onTriggered:{
+                currentDateText.text = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
+            }
+        }
+
+        /*
+                Component.onCompleted: {
+                    for (var i = 0; i < 1; i++) {
+                        reminderModel1.append(createListElement());
+                    }
+                }
+
+                function createListElement() {
+                    //console.log(i)
+                    //console.log("Something Happened")
+                    console.log("Something Happened")
+
+                    return {
+                        someText: "i"
+                    };
+                }
+                //ListElement {
+                //_savedEmail: "fEmail_"
+                //}
+            }
+            */
+
+    }
+
+    Timer {
+        id: timer
+        interval: 1000
+        repeat: true
+        running: true
+        onTriggered:{
+            currentTimeText.text =  Qt.formatTime(new Date(),"hh:mm:ss")
+        }
     }
 
     Rectangle {
@@ -185,7 +358,9 @@ Window {
         width: 640
         height: 480
         color: "#ffffff"
-        Component.onCompleted: database.populateCurrentReminders()
+        Component.onCompleted:
+            database.populateCurrentReminders()
+
 
         Image {
             id: background
@@ -194,7 +369,6 @@ Window {
             fillMode: Image.PreserveAspectFit
             source: "images/abstract_colorful_bg_2.png"
 
-
             Button {
                 id: saveNewBillReminder
                 x: 299
@@ -202,6 +376,21 @@ Window {
                 width: 75
                 height: 25
                 text: qsTr("Save")
+                layer.enabled: true
+                layer.effect: DropShadow {
+                    transparentBorder: true
+                    color: "#aa000000"
+                    radius: 8
+                    samples: 17
+                    horizontalOffset: 4
+                    verticalOffset: 4
+                    spread: 0
+                }
+                background: Rectangle {
+                    color: "#ffffff"
+                    border.color: "#000000"
+                    radius: 50
+                }
 
                 onClicked: {
                     //Run the c++ function to grab the data from here
@@ -211,21 +400,52 @@ Window {
             }
 
             Button {
-                id: button3
+                id: clearBtnNewBillReminder
                 x: 401
                 y: 303
                 width: 75
                 height: 25
                 text: qsTr("Clear")
+                layer.enabled: true
+                layer.effect: DropShadow {
+                    transparentBorder: true
+                    color: "#aa000000"
+                    radius: 8
+                    samples: 17
+                    horizontalOffset: 4
+                    verticalOffset: 4
+                    spread: 0
+                }
+                background: Rectangle {
+                    color: "#ffffff"
+                    border.color: "#000000"
+                    radius: 50
+                }
             }
 
             Button {
-                id: button4
+                id: backBtnNewBillReminder
                 x: 8
                 y: 13
                 width: 65
                 height: 25
                 text: qsTr("Back")
+                flat: false
+                layer.enabled: true
+                layer.effect: DropShadow {
+                    transparentBorder: true
+                    color: "#aa000000"
+                    radius: 8
+                    samples: 17
+                    horizontalOffset: 4
+                    verticalOffset: 4
+                    spread: 0
+                }
+                background: Rectangle {
+                    color: "#ffffff"
+                    border.color: "#000000"
+                    radius: 50
+                }
                 onClicked: {
                     mainMenu.visible = true
                     addItemScreen.visible = false
@@ -261,6 +481,7 @@ Window {
             font.bold: false
             font.pixelSize: 14
         }
+
         Text {
             id: dueDateLabel
             x: 203
@@ -272,6 +493,7 @@ Window {
             font.bold: false
             font.pixelSize: 14
         }
+
         Text {
             id: notifyLabel
             x: 157
@@ -283,6 +505,7 @@ Window {
             font.bold: false
             font.pixelSize: 14
         }
+
         Text {
             id: amountDueLabel
             x: 180
@@ -392,25 +615,11 @@ Window {
         }
     }
 
-    Timer {
-        id: dateTimer
-        interval: 1000
-        repeat: true
-        running: true
-        property var locale: Qt.locale()
-        property date currentDate: new Date()
-        property string dateString
-        onTriggered:{
-            currentDateText.text = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
-        }
-    }
-
     Rectangle {
         id: mainMenu
         width: 640
         height: 480
         color: "#ffffff"
-
 
         Image {
             id: bgImage
@@ -446,6 +655,14 @@ Window {
                 font.bold: false
             }
 
+            Rectangle {
+                id: reminderWinBg
+                x: 91
+                y: 126
+                width: 459
+                height: 243
+                color: "#ffffff"
+            }
         }
 
         Button {
@@ -455,6 +672,21 @@ Window {
             width: 90
             height: 20
             text: qsTr("Add Reminder")
+            layer.enabled: true
+            layer.effect: DropShadow {
+                transparentBorder: true
+                color: "#aa000000"
+                radius: 8
+                samples: 17
+                horizontalOffset: 4
+                verticalOffset: 4
+                spread: 0
+            }
+            background: Rectangle {
+                color: "#ffffff"
+                border.color: "#000000"
+                radius: 50
+            }
             onClicked: {
                 mainMenu.visible = false
                 addItemScreen.visible = true
@@ -485,6 +717,21 @@ Window {
             width: 99
             height: 20
             text: qsTr("Delete Reminder")
+            layer.enabled: true
+            layer.effect: DropShadow {
+                transparentBorder: true
+                color: "#aa000000"
+                radius: 8
+                samples: 17
+                horizontalOffset: 4
+                verticalOffset: 4
+                spread: 0
+            }
+            background: Rectangle {
+                color: "#ffffff"
+                border.color: "#000000"
+                radius: 50
+            }
         }
 
         Text {
@@ -500,98 +747,6 @@ Window {
             font.pixelSize: 19
         }
 
-
-        ScrollView {
-            id: scrollView
-            x: 93
-            y: 129
-            width: 457
-            height: 235
-            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-            ScrollBar.vertical.policy: ScrollBar.AlwaysOn
-
-            ListView {
-                id: listView
-                x: 92
-                y: 130
-                width: 451
-                height: 199
-                highlightFollowsCurrentItem: false
-
-                model: ListModel {
-
-                    id:reminderModel
-                    ListElement {
-                        _billName: ""
-                        _dueDate: ""
-                        _dateToNotify: ""
-                        _amountDue: ""
-                    }
-                }
-
-                ItemDelegate {
-                    x: 5
-                    width: 80
-                    height: 40
-                    focusPolicy: Qt.NoFocus
-                    Row {
-                        id: row1
-                        spacing: 10
-                        //Rectangle {
-                        //width: 40
-                        // height: 40
-                        //color: colorCode
-                        //}
-
-                        Text {
-                            id:reminderText
-                            //text: _billName + "   |   " + _dueDate + "    |   " + _dateToNotify + "    |   " + _amountDue
-                            text: ""
-                            font.bold: false
-                            anchors.verticalCenter: parent.verticalCenter
-                            Connections {
-                                target: database
-                                function onReNextNumber(number) {
-                                    numberLabel.text = number
-                                }
-
-                                onDbBillNameToQml: {
-
-                                    reminderText.text += billName_ + "     |      "
-                                    //reminderModel.append({"_billName": billName_})
-                                }
-                                onDbDueDateToQml: {
-                                    reminderText.text += dueDate_ + "     |      "
-                                    //reminderModel.append({"_dueDate": dueDate_})
-                                }
-
-                                onDbNotifyDateToQml:{
-                                    reminderText.text += notifyDate_ + "     |   "
-                                    //reminderModel.append({"_dateToNotify": notifyDate_})
-                                }
-
-                                onDbAmountDueToQml:{
-
-                                    reminderText.text += amountDue_
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            /*
-            ItemDelegate {
-                id: itemDelegate
-                text: qsTr("<font color=\"white\";font-size=\"16px\">Bank of America | Due: 7/15/22 | $229.00</font>")
-                font.pixelSize: 15
-                font.bold: true
-                //color: "#ffffff"
-            }
-            */
-        }
-
         Button {
             id: settingsButton
             x: 451
@@ -599,6 +754,23 @@ Window {
             width: 99
             height: 20
             text: qsTr("Settings")
+            layer.enabled: true
+            layer.effect: DropShadow {
+                transparentBorder: true
+                color: "#aa000000"
+                radius: 8
+                samples: 17
+                horizontalOffset: 4
+                verticalOffset: 4
+                spread: 0
+            }
+
+            background: Rectangle {
+                color: "#ffffff"
+                border.color: "#000000"
+                radius: 50
+            }
+
             onClicked: {
                 mainMenu.visible = false
                 addItemScreen.visible = false
@@ -644,6 +816,7 @@ Window {
             text: qsTr("Amount Due")
             font.pixelSize: 12
         }
+
         Image {
             id: borderImage
             x: 0
@@ -653,11 +826,70 @@ Window {
             fillMode: Image.PreserveAspectFit
             source: "images/scroll_border_black_thinner.png"
         }
+
+        ListView {
+            id: listView
+            x: 95
+            y: 129
+            width: 451
+            height: 238
+            clip: true
+            highlightFollowsCurrentItem: false
+
+            model: ListModel {
+                id:reminderModel
+                ListElement {
+                    // _billName: ""
+                    // _dueDate: ""
+                    // _dateToNotify: ""
+                    //_amountDue: ""
+                    listEntry: ""
+
+                }
+            }
+
+            delegate: Label{
+                id: iremindLabelText
+                width: 451
+                height: 25
+                Text {
+                    id:reminderText
+                    //text: _billName + "   |   " + _dueDate + "    |   " + _dateToNotify + "    |   " + _amountDue
+                    text: listEntry
+                    font.bold: false
+                    anchors.verticalCenter: parent.verticalCenter
+                    Connections {
+                        target: database
+
+                        onDbBillNameToQml: {
+                            reminderText.text = billName_
+                            //reminderModel.append({"_billName": reminderText.text})
+                        }
+                        onDbDueDateToQml: {
+                            reminderText.text +=  dueDate_
+                            // reminderModel.append({"_dueDate":  reminderText.text += dueDate_ + "     |      "})
+                        }
+                        onDbNotifyDateToQml:{
+
+                            reminderText.text += notifyDate_
+                            //reminderModel.append({"_dateToNotify":  reminderText.text += notifyDate_ + "     |   "})
+                        }
+                        onDbAmountDueToQml:{
+                            reminderText.text += amountDue_
+                            reminderModel.append({"listEntry": reminderText.text})
+                        }
+                        onFBillToQmlDone:{
+                            reminderModel.remove(0)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 /*##^##
 Designer {
-    D{i:2;invisible:true}D{i:36;invisible:true}
+    D{i:1;invisible:true}D{i:33;invisible:true}
 }
 ##^##*/
