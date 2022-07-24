@@ -1,7 +1,11 @@
 # Bill-Bot
- A program to send email reminders for bills | Currently working with: Gmail 
+ An app to send email reminders for bills | Currently working with: Gmail 
  
- ![Bill_Bot_GUI](https://user-images.githubusercontent.com/22214754/179885556-75c34cf2-ad14-4059-b81f-1e08a3ff9714.PNG)  
+![Bill_Bot_GUI_1 2](https://user-images.githubusercontent.com/22214754/180610270-eea82146-4f48-46e8-b140-17de2ea2828b.PNG)  
+
+![Bill_Bot_GUI_2 2](https://user-images.githubusercontent.com/22214754/180610272-ac9e8f5b-4b2a-4893-a26f-bf4dc0ad8cd3.PNG)  
+
+![Bill_Bot_GUI_3 2](https://user-images.githubusercontent.com/22214754/180610273-640743dd-2945-43fa-9bdf-d700f6e22b9d.PNG)  
 
 # Built with:  
 
@@ -12,7 +16,10 @@ Qt Creator 4.12.3
 Based on Qt 5.14.2 (MSVC 2017, 32 bit)  
 Built on Jun 16 2020 01:19:17  
 From revision 48e46132e3  
-https://www.qt.io/  
+https://www.qt.io/ 
+
+Framework:  
+Qt framework 5.15.0    
 
 **Database:**      
 ![sqlitefg](https://user-images.githubusercontent.com/22214754/179894516-3059e142-fb38-40bc-a32c-65500a223eb1.png)  
