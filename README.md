@@ -1,4 +1,4 @@
-# Bill-Bot
+# Bill-Bot | Work In Progress
  An app to send email reminders for bills | Currently working with: Gmail   
  
 ![bb_gui](https://user-images.githubusercontent.com/22214754/180674990-156deb23-5d6e-4fb9-b26b-783502fafccf.gif)    
