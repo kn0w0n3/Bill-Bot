@@ -4,19 +4,19 @@ Database::Database(QObject *parent) : QObject(parent){
     //Multiple connections were required to work with the different tables simultaneously.
     //Format for the query: QSqlQuery query(QSqlDatabase::database("conn2-BillInfo"));
     sEmailDB = QSqlDatabase::addDatabase("QSQLITE", "conn1_EmailInfo");
-    sEmailDB.setDatabaseName("C:/Users/Voldem0rt/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
+    sEmailDB.setDatabaseName("C:/Users/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
 
     billDB = QSqlDatabase::addDatabase("QSQLITE", "conn2-BillInfo");
-    billDB.setDatabaseName("C:/Users/Voldem0rt/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
+    billDB.setDatabaseName("C:/Users/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
 
     populateDB = QSqlDatabase::addDatabase("QSQLITE", "conn3-popCReminders_");
-    populateDB.setDatabaseName("C:/Users/Voldem0rt/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
+    populateDB.setDatabaseName("C:/Users/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
 
     popEmailDB = QSqlDatabase::addDatabase("QSQLITE", "conn4-popSEmailBox");
-    popEmailDB.setDatabaseName("C:/Users/Voldem0rt/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
+    popEmailDB.setDatabaseName("C:/Users/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
 
     fEmailDB = QSqlDatabase::addDatabase("QSQLITE", "conn5-fEmailBox");
-    fEmailDB.setDatabaseName("C:/Users/Voldem0rt/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
+    fEmailDB.setDatabaseName("C:/Users/Documents/Qt_Projects/Bill-Bot/database/bill_info.db");
 
     //For now, do an initial check to see if the connections are working.
     if(!sEmailDB.open()){

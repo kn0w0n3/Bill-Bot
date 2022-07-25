@@ -21,8 +21,6 @@ Window {
             database.getFirstDatabaseEntries()
         }
 
-
-
         Image {
             id: image
             x: 0
@@ -251,57 +249,6 @@ Window {
             font.pixelSize: 16
         }
 
-        ListView{
-            id: savedEmailListVew
-            x: 351
-            y: 133
-            width: 264
-            height: 138
-            clip: true
-            orientation: ListView.Vertical
-            highlightFollowsCurrentItem: false
-            //headerPositioning: savedEmailListVew.OverlayHeader
-            model: ListModel {
-                id:reminderEmailModel
-                ListElement {
-
-                    someText: "someText"
-                    //anchors.centerIn: parent
-
-                }
-            }
-
-            //Populating the list model dynaically is haveing some issues. Janky workaround is to just remove the duplicate first entry.
-            delegate: Label{
-
-                id: iEmailLabel
-                width: 451
-                height: 25
-
-                Text {
-                    id:iEMailText
-
-                    text: someText
-                    font.bold: false
-                    anchors.verticalCenter: parent.verticalCenter
-                    Connections {
-                        target: database
-
-                        onFEmailToQml: {
-                            iEMailText.text = fEmail_
-                            reminderEmailModel.append({"someText": fEmail_})
-                        }
-                        onFEmailToQmlDone: {
-                            reminderEmailModel.remove(0)
-                        }
-
-                    }
-
-                }
-            }
-
-
-        }
 
 
         //Timer to update the date text
@@ -341,6 +288,59 @@ Window {
             }
             */
 
+        ListView{
+            id: savedEmailListVew
+            x: 348
+            y: 130
+            width: 272
+            height: 146
+            clip: true
+            orientation: ListView.Vertical
+            highlightFollowsCurrentItem: false
+            //headerPositioning: savedEmailListVew.OverlayHeader
+            model: ListModel {
+                id:reminderEmailModel
+                ListElement {
+
+                    someText: "someText"
+                    //anchors.centerIn: parent
+
+                }
+            }
+
+            //Populating the list model dynaically is haveing some issues. Janky workaround is to just remove the duplicate first entry.
+            delegate: Rectangle{
+
+                id: iEmailLabel
+                width: 272
+                height: 23
+                border.color: "#000000"
+                radius: 5
+
+                Text {
+                    id:iEMailText
+
+                    text: someText
+                    font.bold: false
+                    anchors.verticalCenter: parent.verticalCenter
+                    Connections {
+                        target: database
+
+                        onFEmailToQml: {
+                            iEMailText.text = fEmail_
+                            reminderEmailModel.append({"someText": fEmail_})
+                        }
+                        onFEmailToQmlDone: {
+                            reminderEmailModel.remove(0)
+                        }
+
+                    }
+
+                }
+            }
+
+
+        }
     }
 
     Timer {
@@ -829,12 +829,18 @@ Window {
 
         ListView {
             id: listView
-            x: 95
-            y: 129
-            width: 451
-            height: 238
+            x: 92
+            y: 126
+            width: 460
+            height: 241
             clip: true
-            highlightFollowsCurrentItem: false
+            //delegate: reminderText
+           // highlight: iremindLabelText
+            //highlightFollowsCurrentItem: false
+            //highlightRangeMode: ListView.StrictlyEnforceRange
+
+            focus: true
+
 
             model: ListModel {
                 id:reminderModel
@@ -848,10 +854,12 @@ Window {
                 }
             }
 
-            delegate: Label{
+            delegate: Rectangle{
                 id: iremindLabelText
-                width: 451
-                height: 25
+                width: 458
+                height: 23
+                border.color: "#000000"
+                radius: 5
                 Text {
                     id:reminderText
                     //text: _billName + "   |   " + _dueDate + "    |   " + _dateToNotify + "    |   " + _amountDue
@@ -882,14 +890,23 @@ Window {
                             reminderModel.remove(0)
                         }
                     }
+                    //MouseArea {
+                                   // anchors.fill: parent
+                                    //onClicked: listView.currentIndex = index
+                                               //var cc = listView.currentIndex
+                                    //console.log(listView.currentIndex = index);
+                                //}
+                            }
+
+                       }
+
                 }
             }
         }
-    }
-}
+
 
 /*##^##
 Designer {
-    D{i:1;invisible:true}D{i:33;invisible:true}
+    D{i:33;invisible:true}D{i:57;invisible:true}
 }
 ##^##*/
